@@ -1,7 +1,7 @@
 {
   "dependencies": [
     "fmt",
-    "opencv",
-    "nu-book-zxing-cpp"
+    "nu-book-zxing-cpp",
+    "opencv"
   ]
 }
