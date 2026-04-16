@@ -31,13 +31,17 @@ int main()
         if(cv::waitKey(10) == 27) break; 
     }
     cap.release();
-    fmt::print("The link that has been detected is: " + linkname + '\n');
-    fmt::print("Enter '1' to open! Enter anything else to close without opening link...\n");
+    cv::destroyAllWindows();
 
-    int input;
-    std::cin >> input;
-    if (input == 1){
-        openurl(linkname);
+    if (!linkname.empty()){
+        fmt::print("The link that has been detected is: " + linkname + '\n');
+        fmt::print("Enter '1' to open! Enter anything else to close without opening link...\n");
+
+        int input;
+        std::cin >> input;
+        if (input == 1){
+            openurl(linkname);
+        }
     }
 
     return 0;
