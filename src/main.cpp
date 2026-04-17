@@ -7,6 +7,8 @@ void preprocess(cv::Mat& img);
 
 int main()
 {
+    fmt::print("----------------------Welcome to LazyQR----------------------\n");
+    fmt::print("When your camera turns on, hold up a qr code to it to open it!\n");
     cv::VideoCapture cap(0, cv::CAP_DSHOW); 
     if (!cap.isOpened()) {
         fmt::print("Error: Could not open camera\n");
@@ -18,8 +20,8 @@ int main()
     cv::Mat frame;
     std::string linkname;
     while (cap.read(frame)){  
-        preprocess(frame);
         cv::imshow("Video", frame);
+        preprocess(frame);
 
         auto image = ZXing::ImageView(frame.data, frame.cols, frame.rows, ZXing::ImageFormat::Lum);
         auto result = ZXing::ReadBarcode(image);
@@ -34,6 +36,7 @@ int main()
     cv::destroyAllWindows();
 
     if (!linkname.empty()){
+        fmt::print("------------------------------------------------------------------\n");
         fmt::print("The link that has been detected is: " + linkname + '\n');
         fmt::print("Enter '1' to open! Enter anything else to close without opening link...\n>>> ");
 
