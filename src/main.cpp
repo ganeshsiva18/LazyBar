@@ -1,7 +1,7 @@
 #include <fmt/core.h>
 #include <opencv2/opencv.hpp>
 #include <ZXing/ReadBarcode.h>
-#include <include/winqrlib.hpp>
+#include <include/osqrlib.hpp>
 
 void preprocess(cv::Mat& img);
 
@@ -35,7 +35,7 @@ int main()
 
     if (!linkname.empty()){
         fmt::print("The link that has been detected is: " + linkname + '\n');
-        fmt::print("Enter '1' to open! Enter anything else to close without opening link...\n");
+        fmt::print("Enter '1' to open! Enter anything else to close without opening link...\n>>> ");
 
         int input;
         std::cin >> input;

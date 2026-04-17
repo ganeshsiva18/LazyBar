@@ -8,12 +8,12 @@ find_package(fmt CONFIG REQUIRED)
 find_package(OpenCV CONFIG REQUIRED)
 find_package(ZXing CONFIG REQUIRED)
 
-add_subdirectory(libs/winqrlib)
+add_subdirectory(libs/osqrlib)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
-"${CMAKE_CURRENT_SOURCE_DIR}/libs/winqrlib"
+"${CMAKE_CURRENT_SOURCE_DIR}/libs/osqrlib"
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
@@ -21,5 +21,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     ZXing::Core
     ZXing::ZXing
     ${OpenCV_LIBS}
-    Winqrlib
+    Osqrlib
 )

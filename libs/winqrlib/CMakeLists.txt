@@ -1,1 +1,0 @@
-add_library(Winqrlib winqrlib.cpp include/winqrlib.hpp)
