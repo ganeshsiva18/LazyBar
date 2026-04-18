@@ -10,36 +10,51 @@ jobs:
   build:
     strategy:
       matrix:
-        include:
+          include:
           - os: windows-latest
-            generator: NSIS64
+            preset: windows-release
+            artifact: "*.exe"
           - os: ubuntu-latest
-            generator: DEB
+            preset: linux-release
+            artifact: "*.deb"
           - os: macos-latest
-            generator: DragNDrop
+            preset: mac-release
+            artifact: "*.dmg"
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
+      - name: Install Ninja (Windows)
+        if: runner.os == 'Windows'
+        uses: seanmiddleditch/gha-setup-ninja@v4
+
+      - name: Install Ninja (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y ninja-build
+ 
+      - name: Install Ninja (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ninja
+ 
       - name: Install vcpkg
         uses: lukka/run-vcpkg@v11
-
+ 
       - name: Configure
-        run: cmake --preset default
-
+        run: cmake --preset ${{ matrix.preset }}
+ 
       - name: Build
         run: cmake --build build/out --config Release
-
+ 
       - name: Package
         run: cd build/out && cpack
-
+ 
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
           name: installer-${{ matrix.os }}
-          path: build/out/*.exe
-                build/out/*.deb
-                build/out/*.dmg
+          path: build/out/${{ matrix.artifact }}

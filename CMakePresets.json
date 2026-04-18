@@ -2,8 +2,8 @@
   "version": 3,
   "configurePresets": [
     {
-      "name": "default",
-      "displayName": "Default Config",
+      "name": "windows-release",
+      "displayName": "Windows Config",
       "binaryDir": "${sourceDir}/build/out",
       "generator": "Ninja",
       "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
@@ -12,14 +12,63 @@
         "VCPKG_TARGET_TRIPLET": "x64-windows",
         "CMAKE_C_COMPILER": "cl",
         "CMAKE_CXX_COMPILER": "cl"
+      },
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "linux-release",
+      "displayName": "Linux Release",
+      "binaryDir": "${sourceDir}/build/out",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "mac-release",
+      "displayName": "Mac Release",
+      "binaryDir": "${sourceDir}/build/out",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "VCPKG_TARGET_TRIPLET": "arm64-osx"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
       }
     }
   ],
   "buildPresets": [
     {
-      "name": "default",
-      "configurePreset": "default",
-      "displayName": "Default Build"
+      "name": "windows-release",
+      "configurePreset": "windows-release",
+      "displayName": "Windows Build"
+    },
+    {
+      "name": "linux-release",
+      "configurePreset": "linux-release",
+      "displayName": "Linux Build"
+    },
+    {
+      "name": "mac-release",
+      "configurePreset": "mac-release",
+      "displayName": "Mac Build"
     }
   ]
 }
