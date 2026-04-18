@@ -1,0 +1,45 @@
+name: Build and Package
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ created ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            generator: NSIS64
+          - os: ubuntu-latest
+            generator: DEB
+          - os: macos-latest
+            generator: DragNDrop
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install vcpkg
+        uses: lukka/run-vcpkg@v11
+
+      - name: Configure
+        run: cmake --preset release
+
+      - name: Build
+        run: cmake --build build/out --config Release
+
+      - name: Package
+        run: cd build/out && cpack
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-${{ matrix.os }}
+          path: build/out/*.exe
+                build/out/*.deb
+                build/out/*.dmg
