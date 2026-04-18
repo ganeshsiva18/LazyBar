@@ -36,7 +36,6 @@ endif()
 
 # Install Rules
 
-set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP TRUE)
 include(InstallRequiredSystemLibraries)
 install(PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS} DESTINATION bin)
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
@@ -45,16 +44,28 @@ if(WIN32)
     install(DIRECTORY "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/"
         DESTINATION bin
         FILES_MATCHING PATTERN "*.dll"
+        PATTERN "*d.dll" EXCLUDE
     )
 elseif(APPLE)
     install(CODE "
         include(BundleUtilities)
         fixup_bundle(
-            \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/bin/LazyQR\"
+            \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}\"
             \"\"
             \"${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib\"
         )
-    " COMPONENT Runtime)
+    ")
+elseif(UNIX)
+    install(DIRECTORY "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/"
+        DESTINATION lib/${PROJECT_NAME}
+        FILES_MATCHING
+            PATTERN "*.so"
+            PATTERN "*.so.*"
+    )
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        INSTALL_RPATH "$ORIGIN/../lib/${PROJECT_NAME}"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
 endif()
 
 # CPack Data
@@ -74,9 +85,9 @@ elseif(UNIX)
     set(CPACK_GENERATOR "DEB;RPM")
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "GaneshS")
     set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libfmt-dev, libopencv-dev, libzxing-dev")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.17), libstdc++6 (>= 9)")
     set(CPACK_RPM_PACKAGE_LICENSE "MIT")
-    set(CPACK_RPM_PACKAGE_REQUIRES "fmt-devel, opencv-devel, zxing-cpp-devel")
+    set(CPACK_RPM_PACKAGE_REQUIRES "glibc >= 2.17, libstdc++ >= 9")
 endif()
  
 include(CPack)

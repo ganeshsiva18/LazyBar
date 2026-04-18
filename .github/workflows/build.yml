@@ -1,16 +1,16 @@
 name: Build and Package
-
+ 
 on:
   push:
     branches: [ main ]
   release:
     types: [ created ]
-
+ 
 jobs:
   build:
     strategy:
       matrix:
-          include:
+        include:
           - os: windows-latest
             preset: windows-release
             artifact: "*.exe"
@@ -20,15 +20,15 @@ jobs:
           - os: macos-latest
             preset: mac-release
             artifact: "*.dmg"
-
+ 
     runs-on: ${{ matrix.os }}
-
+ 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: recursive
-          
+ 
       - name: Install build tools (Linux)
         if: runner.os == 'Linux'
         run: |
@@ -45,24 +45,30 @@ jobs:
       - name: Install Ninja (Windows)
         if: runner.os == 'Windows'
         uses: seanmiddleditch/gha-setup-ninja@v4
- 
+
       - name: Install vcpkg
         uses: lukka/run-vcpkg@v11
         with:
           runVcpkgInstall: true
+ 
+      - name: Export VCPKG_ROOT for subsequent steps
+        shell: bash
+        run: echo "VCPKG_ROOT=$VCPKG_ROOT" >> $GITHUB_ENV
  
       - name: Configure
         run: cmake --preset ${{ matrix.preset }}
  
       - name: Build
         run: cmake --build build/out --config Release
+
+      - name: Install (stage for CPack)
+        run: cmake --install build/out --prefix build/out/install
  
       - name: Package
-        run: cd build/out && cpack
+        run: cd build/out && cpack -C Release
  
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
           name: installer-${{ matrix.os }}
           path: build/out/${{ matrix.artifact }}
- 
