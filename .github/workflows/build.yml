@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{ matrix.os }}
  
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -34,24 +34,17 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y ninja-build gcc g++ make rpm
-          echo "$(which ninja)" >> $GITHUB_PATH
- 
-      - name: Install build tools (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          brew install ninja
-          echo "$(brew --prefix)/bin" >> $GITHUB_PATH
  
       - name: Install Ninja (Windows)
         if: runner.os == 'Windows'
         uses: seanmiddleditch/gha-setup-ninja@v4
-
-      - name: Install vcpkg
+ 
+      - name: Install vcpkg and dependencies
         uses: lukka/run-vcpkg@v11
         with:
           runVcpkgInstall: true
  
-      - name: Export VCPKG_ROOT for subsequent steps
+      - name: Export VCPKG_ROOT
         shell: bash
         run: echo "VCPKG_ROOT=$VCPKG_ROOT" >> $GITHUB_ENV
  
@@ -60,14 +53,14 @@ jobs:
  
       - name: Build
         run: cmake --build build/out --config Release
-
-      - name: Install (stage for CPack)
+ 
+      - name: Install
         run: cmake --install build/out --prefix build/out/install
  
       - name: Package
         run: cd build/out && cpack -C Release
  
-      - name: Upload installer
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: installer-${{ matrix.os }}
