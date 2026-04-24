@@ -33,12 +33,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            ninja-build gcc g++ make rpm \
-            gperf \
-            libgtk-3-dev \
-            libglib2.0-dev \
-            pkg-config
+          sudo apt-get install -y ninja-build gcc g++ make rpm
  
       - name: Install Ninja (Windows)
         if: runner.os == 'Windows'
@@ -47,11 +42,12 @@ jobs:
       - name: Install vcpkg and dependencies
         uses: lukka/run-vcpkg@v11
         with:
+          vcpkgDirectory: "${{ github.workspace }}/vcpkg"
           runVcpkgInstall: true
  
       - name: Export VCPKG_ROOT
         shell: bash
-        run: echo "VCPKG_ROOT=$VCPKG_ROOT" >> $GITHUB_ENV
+        run: echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> $GITHUB_ENV
  
       - name: Configure
         run: cmake --preset ${{ matrix.preset }}
