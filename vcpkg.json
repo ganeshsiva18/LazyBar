@@ -7,8 +7,6 @@
       "default-features": false,
       "features": [
         "highgui",
-        "dshow",
-        "msmf",
         "jpeg",
         "png"
       ]
