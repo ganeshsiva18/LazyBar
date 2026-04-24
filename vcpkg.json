@@ -2,6 +2,16 @@
   "dependencies": [
     "fmt",
     "nu-book-zxing-cpp",
-    "opencv"
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "highgui",
+        "dshow",
+        "msmf",
+        "jpeg",
+        "png"
+      ]
+    }
   ]
 }
