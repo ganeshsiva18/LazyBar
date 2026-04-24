@@ -6,9 +6,18 @@
       "name": "opencv4",
       "default-features": false,
       "features": [
+        "world",
         "highgui",
-        "jpeg",
-        "png"
+        "dshow",
+        "msmf",
+        {
+          "name": "win32ui",
+          "platform": "windows"
+        },
+        {
+          "name": "gtk",
+          "platform": "linux"
+        }
       ]
     }
   ]
