@@ -56,6 +56,10 @@ jobs:
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
  
+      - name: Install NSIS (Windows)
+        if: runner.os == 'Windows'
+        run: choco install nsis -y
+
       - name: Install vcpkg and dependencies
         uses: lukka/run-vcpkg@v11
         with:
