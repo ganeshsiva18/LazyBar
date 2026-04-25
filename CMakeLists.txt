@@ -20,7 +20,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     fmt::fmt
     ZXing::Core
     ZXing::ZXing
-    ${OpenCV_LIBS}
+    opencv_world
     Osqrlib
 )
 
