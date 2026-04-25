@@ -7,18 +7,26 @@
       "default-features": false,
       "features": [
         "world",
-        "highgui",
+        "highgui"
+      ]
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
         "dshow",
         "msmf",
-        {
-          "name": "win32ui",
-          "platform": "windows"
-        },
-        {
-          "name": "gtk",
-          "platform": "linux"
-        }
-      ]
+        "win32ui"
+      ],
+      "platform": "windows"
+    },
+    {
+      "name": "opencv4",
+      "default-features": false,
+      "features": [
+        "gtk"
+      ],
+      "platform": "linux"
     }
   ]
 }
