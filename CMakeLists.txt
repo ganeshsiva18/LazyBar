@@ -47,14 +47,16 @@ if(WIN32)
         PATTERN "*d.dll" EXCLUDE
     )
 elseif(APPLE)
-    install(CODE "
-        include(BundleUtilities)
-        fixup_bundle(
-            \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/bin/${PROJECT_NAME}\"
-            \"\"
-            \"${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib\"
-        )
-    ")
+    install(DIRECTORY "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/"
+        DESTINATION lib/${PROJECT_NAME}
+        FILES_MATCHING
+            PATTERN "*.dylib"
+            PATTERN "*debug*" EXCLUDE
+    )
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        INSTALL_RPATH "@executable_path/../lib/${PROJECT_NAME}"
+        BUILD_WITH_INSTALL_RPATH TRUE
+    )
 elseif(UNIX)
     install(DIRECTORY "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/"
         DESTINATION lib/${PROJECT_NAME}
@@ -67,6 +69,7 @@ elseif(UNIX)
         BUILD_WITH_INSTALL_RPATH TRUE
     )
 endif()
+
 
 # CPack Data
 
